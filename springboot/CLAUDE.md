@@ -218,6 +218,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 ### BaseEntity
 
 ```java
+@EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 @Data
 public class BaseEntity {
