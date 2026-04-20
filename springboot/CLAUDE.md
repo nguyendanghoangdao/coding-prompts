@@ -108,26 +108,25 @@ public class UserController {
 
     // POST with body → wrapped in CreateUserRequest
     @PostMapping
-    public ResponseEntity<BaseResponse<UserResponse>> createUser(
+    public BaseResponse<UserResponse> createUser(
             @Valid @RequestBody CreateUserRequest request) {
         User user = userService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(BaseResponse.success(userMapper.toResponse(user)));
+        return BaseResponse.success(userMapper.toResponse(user));
     }
 
     // GET with query params → wrapped in ListUsersRequest
     @GetMapping
-    public ResponseEntity<BaseResponse<PageResponse<UserResponse>>> getUsers(
+    public BaseResponse<PageResponse<UserResponse>> getUsers(
             @Valid ListUsersRequest request) {
         Page<User> page = userService.findAll(request);
-        return ResponseEntity.ok(BaseResponse.success(userMapper.toPageResponse(page)));
+        return BaseResponse.success(userMapper.toPageResponse(page));
     }
 
     // DELETE with path variable → path variable used directly
     @DeleteMapping("/{id}")
-    public ResponseEntity<BaseResponse<Void>> deleteUser(@PathVariable Long id) {
+    public BaseResponse<Void> deleteUser(@PathVariable Long id) {
         userService.delete(id);
-        return ResponseEntity.ok(BaseResponse.success(null));
+        return BaseResponse.success(null);
     }
 }
 ```
