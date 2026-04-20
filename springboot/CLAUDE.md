@@ -249,8 +249,8 @@ public class BaseEntity {
 public class User extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @UuidGenerator
+    private UUID id;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -318,12 +318,13 @@ public class CreateUserRequest {
 - Must never expose sensitive fields (e.g., passwords, tokens).
 - Use Lombok `@Data`, `@AllArgsConstructor`, `@NoArgsConstructor`.
 
+For example:
 ```java
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponse {
-    private Long id;
+public class UserDto {
+    private String id;
     private String email;
     private String fullName;
     private UserStatus status;
@@ -484,7 +485,7 @@ When generating or modifying code in this project, always follow these rules:
 5. **Always** wrap all API responses in `BaseResponse<T>`.
 6. **Always** wrap paginated responses in `BaseResponse<PageResponse<T>>`.
 7. **Always** extend `PaginatedRequest` for list requests that support pagination.
-8. **All** entities must extend `BaseEntity`. Add `deletedAt`/`deletedBy` manually for soft-delete entities.
+8. **All** entities must extend `BaseEntity`. Add `deletedAt`/`deletedBy` manually for soft-delete entities. Using UUID for id.
 9. **Never** use `@Data` on JPA entities — use `@Getter`, `@Setter`, `@NoArgsConstructor` instead.
 10. **Always** throw `ValidationException` (not raw `RuntimeException`) for service-layer business rule violations.
 11. **Never** handle exceptions inline in controllers — always delegate to `GlobalExceptionHandler`.
