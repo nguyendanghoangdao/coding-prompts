@@ -26,7 +26,7 @@
 ```
 src/
 ├── main/
-│   ├── java/com/company/project/
+│   ├── java/<package directories>/
 │   │   ├── config/          # Spring configuration classes (@Configuration)
 │   │   │   └── ApplicationConfig.java  # Main app config (@Component + @ConfigurationProperties(prefix = "application"))
 │   │   ├── controller/      # REST controllers (@RestController)
@@ -219,7 +219,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 ```java
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-@Data
+@Getter
+@Setter
 public class BaseEntity {
 
     @Column(name = "created_at", nullable = false, updatable = false)
