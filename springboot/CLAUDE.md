@@ -108,6 +108,7 @@ public class UserController {
 
     // POST with body → wrapped in CreateUserRequest
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public BaseResponse<UserResponse> createUser(
             @Valid @RequestBody CreateUserRequest request) {
         User user = userService.create(request);
