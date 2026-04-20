@@ -34,6 +34,10 @@ src/
 │   │   ├── repository/      # Data access layer (@Repository)
 │   │   ├── entity/          # JPA entities (@Entity)
 │   │   ├── dto/             # Data Transfer Objects (request/response)
+│   │   │   ├── user
+│   │   │   ├── ├── CreateUserRequest.java
+│   │   │   ├── └── ...
+│   │   │   └── ... 
 │   │   ├── mapper/          # DTO <-> Entity mappers (MapStruct)
 │   │   ├── exception/       # Custom exceptions & global handler
 │   │   ├── security/        # Security config, filters, JWT utils
@@ -97,6 +101,7 @@ HTTP Request
 ### Request Rules
 All API requests that have a body **or** are GET requests with query params **must** be wrapped in a dedicated class. Path variables are the only exception.
 
+Example controller:
 ```java
 @RestController
 @RequestMapping("/api/v1/users")
@@ -109,7 +114,7 @@ public class UserController {
     // POST with body → wrapped in CreateUserRequest
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponse<UserResponse> createUser(
+    public BaseResponse<UserDto> createUser(
             @Valid @RequestBody CreateUserRequest request) {
         User user = userService.create(request);
         return BaseResponse.success(userMapper.toResponse(user));
@@ -117,7 +122,7 @@ public class UserController {
 
     // GET with query params → wrapped in ListUsersRequest
     @GetMapping
-    public BaseResponse<PageResponse<UserResponse>> getUsers(
+    public BaseResponse<PageResponse<UserDto>> getUsers(
             @Valid ListUsersRequest request) {
         Page<User> page = userService.findAll(request);
         return BaseResponse.success(userMapper.toPageResponse(page));
@@ -271,6 +276,15 @@ public class User extends BaseEntity {
 ---
 
 ## 8. DTO Layer
+DTOs should be grouped into packages by feature to improve maintainability and readability.
+For example:
+```
+dto
+|- user
+    |- CreateUserRequest.java
+    |- UpdateUserRequest.java
+    |- ...
+```
 
 ### Request DTOs
 - Use Lombok `@Data`, `@AllArgsConstructor`, `@NoArgsConstructor`.
@@ -287,7 +301,7 @@ public class PaginatedRequest {
     protected int size = 10;
 }
 
-// Paginated list request
+// Paginated list request example
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -296,7 +310,7 @@ public class ListUsersRequest extends PaginatedRequest {
     private String email;
 }
 
-// Create request
+// Create request example
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -373,8 +387,8 @@ public class PageResponse<T> {
 ```java
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    UserResponse toResponse(User user);
-    PageResponse<UserResponse> toPageResponse(Page<User> page);
+    UserDto toDto(User user);
+    PageResponse<UserDto> toPageResponse(Page<User> page);
 }
 ```
 
